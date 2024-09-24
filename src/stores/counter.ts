@@ -1,5 +1,5 @@
-import { ref } from 'vue'
-import { defineStore } from 'pinia'
+import { ref } from 'vue';
+import { defineStore } from 'pinia';
 import axios from "axios";
 
 interface Sneakers {
@@ -8,7 +8,7 @@ interface Sneakers {
   price: number;
   imageUrl: string;
   isFavorite: boolean;
-  isAdded: boolean
+  isAdded: boolean;
 }
 
 export const useSneakersStore = defineStore('sneakers', () => {
@@ -38,8 +38,15 @@ export const useSneakersStore = defineStore('sneakers', () => {
     return axios.patch(`https://ac80202a41369ee0.mokky.dev/items/${id}/`, {
       isFavorite: favorite,
     })
-        .then(({ data }) => {
-          setSneakers(data);
+        .then(() => {
+          const index = sneakers.value.findIndex(sneaker => sneaker.id === id);
+          if (index !== -1) {
+            sneakers.value[index] = {
+              ...sneakers.value[index],
+              isFavorite: favorite
+            };
+          }
+          getSneakers();
         })
         .catch(({ response }) => {
           setError(response.data.errors);
@@ -49,6 +56,7 @@ export const useSneakersStore = defineStore('sneakers', () => {
   return {
     getSneakers,
     updateSneakers,
-    sneakers
-  }
-})
+    sneakers,
+    errors
+  };
+});
