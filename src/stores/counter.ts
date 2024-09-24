@@ -1,4 +1,4 @@
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { defineStore } from 'pinia';
 import axios from "axios";
 
@@ -14,6 +14,10 @@ interface Sneakers {
 export const useSneakersStore = defineStore('sneakers', () => {
   const errors = ref({});
   const sneakers = ref<Sneakers[]>([]);
+  const filters = ref({
+    sortBy: 'title',
+    searchQuery: ''
+  });
 
   function setSneakers(arr: Sneakers[]) {
     sneakers.value = arr;
@@ -25,7 +29,15 @@ export const useSneakersStore = defineStore('sneakers', () => {
   }
 
   function getSneakers() {
-    return axios.get(`https://ac80202a41369ee0.mokky.dev/items/`)
+    const params: any = {
+      sortBy: filters.value.sortBy,
+    };
+
+    if (filters.value.searchQuery) {
+      params.title = `*${filters.value.searchQuery}*`;
+    }
+
+    return axios.get(`https://ac80202a41369ee0.mokky.dev/items/`, { params })
         .then(({ data }) => {
           setSneakers(data);
         })
@@ -46,17 +58,19 @@ export const useSneakersStore = defineStore('sneakers', () => {
               isFavorite: favorite
             };
           }
-          getSneakers();
         })
         .catch(({ response }) => {
           setError(response.data.errors);
         });
   }
 
+  // Викликаємо getSneakers, коли фільтри змінюються
+  watch(filters, getSneakers);
+
   return {
     getSneakers,
     updateSneakers,
     sneakers,
-    errors
+    filters
   };
 });
