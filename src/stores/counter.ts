@@ -11,9 +11,15 @@ interface Sneakers {
   isAdded: boolean;
 }
 
+interface Favorite {
+  sneakerId: number;
+  favoriteId: number
+}
+
 export const useSneakersStore = defineStore('sneakers', () => {
   const errors = ref({});
   const sneakers = ref<Sneakers[]>([]);
+  const favorites = ref<Favorite>();
   const filters = ref({
     sortBy: 'title',
     searchQuery: ''
@@ -21,7 +27,10 @@ export const useSneakersStore = defineStore('sneakers', () => {
 
   function setSneakers(arr: Sneakers[]) {
     sneakers.value = arr;
-    errors.value = {};
+  }
+
+  function setFavorite(obj: Favorite) {
+    favorites.value = obj;
   }
 
   function setError(error: any) {
@@ -64,12 +73,60 @@ export const useSneakersStore = defineStore('sneakers', () => {
         });
   }
 
+  function postFavorite(sneakerId: number) {
+    return axios.post(`https://ac80202a41369ee0.mokky.dev/favorites/`,{
+      sneakerId: sneakerId,
+    })
+        .then(({ data }) => {
+          setFavorite(data);
+        })
+        .catch(({ response }) => {
+          errors.value = response.data.errors;
+        });
+  }
+
+  // function deleteFavorite(sneakerId: number) {
+  //   return axios.delete(`https://ac80202a41369ee0.mokky.dev/favorites/${sneakerId}`)
+  //       .then(() => {
+  //         const index = sneakers.value.findIndex(sneaker => sneaker.id === sneakerId);
+  //         if (index !== -1) {
+  //           sneakers.value[index].isFavorite = false;
+  //         }
+  //       })
+  //       .catch(({ response }) => {
+  //         errors.value = response.data.errors;
+  //       });
+  // }
+
+  function deleteFavorite(sneakerId: number) {
+    // Знаходимо відповідний улюблений елемент за sneakerId
+    const favorite = favorites.value.find((fav: number) => fav.sneakerId === sneakerId);
+
+    if (favorite) {
+      return axios.delete(`https://ac80202a41369ee0.mokky.dev/favorites/${favorite.id}`)
+          .then(() => {
+            const index = sneakers.value.findIndex(sneaker => sneaker.id === sneakerId);
+            if (index !== -1) {
+              sneakers.value[index].isFavorite = false;
+            }
+          })
+          .catch(({ response }) => {
+            errors.value = response.data.errors;
+          });
+    } else {
+      console.error("Улюблений елемент з таким sneakerId не знайдено");
+    }
+  }
+
+
   // Викликаємо getSneakers, коли фільтри змінюються
   watch(filters, getSneakers);
 
   return {
     getSneakers,
     updateSneakers,
+    postFavorite,
+    deleteFavorite,
     sneakers,
     filters
   };

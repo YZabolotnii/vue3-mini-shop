@@ -19,7 +19,14 @@ const onClickAdd = () => {
 };
 
 const onClickFavourite = (id: number, isFavorite: boolean) => {
-  sneakersStore.updateSneakers(id, !isFavorite);
+  sneakersStore.updateSneakers(id, !isFavorite).then(() => {
+    if(!isFavorite) {
+      sneakersStore.postFavorite(id);
+    } else {
+      sneakersStore.deleteFavorite(id);
+    }
+  });
+
 };
 
 sneakersStore.getSneakers();
