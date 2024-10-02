@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import Header from '@/components/Header.vue';
 import CardList from '@/components/CardList.vue';
+
 </script>
 
 <template>

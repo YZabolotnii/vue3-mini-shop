@@ -18,15 +18,15 @@ const onClickAdd = () => {
   console.log('clicked add');
 };
 
-const onClickFavourite = (id: number, isFavorite: boolean) => {
-  sneakersStore.updateSneakers(id, !isFavorite).then(() => {
-    if(!isFavorite) {
-      sneakersStore.postFavorite(id);
+const onClickFavourite = (sneakerId: number, isFavorite: boolean) => {
+  sneakersStore.updateSneakers(sneakerId, !isFavorite).then(() => {
+    if (!isFavorite) {
+      sneakersStore.postFavorite(sneakerId);
     } else {
-      sneakersStore.deleteFavorite(id);
+      sneakersStore.deleteFavorite(sneakerId);
+
     }
   });
-
 };
 
 sneakersStore.getSneakers();

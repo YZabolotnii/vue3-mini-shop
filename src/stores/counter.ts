@@ -13,13 +13,13 @@ interface Sneakers {
 
 interface Favorite {
   sneakerId: number;
-  favoriteId: number
+  favoriteId: number;
 }
 
 export const useSneakersStore = defineStore('sneakers', () => {
   const errors = ref({});
   const sneakers = ref<Sneakers[]>([]);
-  const favorites = ref<Favorite>();
+  const favorites = ref<Favorite[]>([]); // Change to an array of Favorite
   const filters = ref({
     sortBy: 'title',
     searchQuery: ''
@@ -30,7 +30,7 @@ export const useSneakersStore = defineStore('sneakers', () => {
   }
 
   function setFavorite(obj: Favorite) {
-    favorites.value = obj;
+    favorites.value.push(obj);
   }
 
   function setError(error: any) {
@@ -85,41 +85,20 @@ export const useSneakersStore = defineStore('sneakers', () => {
         });
   }
 
-  // function deleteFavorite(sneakerId: number) {
-  //   return axios.delete(`https://ac80202a41369ee0.mokky.dev/favorites/${sneakerId}`)
-  //       .then(() => {
-  //         const index = sneakers.value.findIndex(sneaker => sneaker.id === sneakerId);
-  //         if (index !== -1) {
-  //           sneakers.value[index].isFavorite = false;
-  //         }
-  //       })
-  //       .catch(({ response }) => {
-  //         errors.value = response.data.errors;
-  //       });
-  // }
-
-  function deleteFavorite(sneakerId: number) {
-    // Знаходимо відповідний улюблений елемент за sneakerId
-    const favorite = favorites.value.find((fav: number) => fav.sneakerId === sneakerId);
-
-    if (favorite) {
-      return axios.delete(`https://ac80202a41369ee0.mokky.dev/favorites/${favorite.id}`)
-          .then(() => {
-            const index = sneakers.value.findIndex(sneaker => sneaker.id === sneakerId);
-            if (index !== -1) {
-              sneakers.value[index].isFavorite = false;
-            }
-          })
-          .catch(({ response }) => {
-            errors.value = response.data.errors;
-          });
-    } else {
-      console.error("Улюблений елемент з таким sneakerId не знайдено");
-    }
+  function deleteFavorite(favoriteId: number) {
+    return axios.delete(`https://ac80202a41369ee0.mokky.dev/favorites/${favoriteId}`)
+        .then(() => {
+          const index = favorites.value.findIndex(fav => fav.favoriteId === favoriteId);
+          if (index !== -1) {
+            favorites.value.splice(index, 1);
+          }
+        })
+        .catch(({ response }) => {
+          console.error(response.data.errors);
+        });
   }
 
-
-  // Викликаємо getSneakers, коли фільтри змінюються
+  // Call getSneakers when filters change
   watch(filters, getSneakers);
 
   return {
@@ -128,6 +107,7 @@ export const useSneakersStore = defineStore('sneakers', () => {
     postFavorite,
     deleteFavorite,
     sneakers,
+    favorites,
     filters
   };
 });
