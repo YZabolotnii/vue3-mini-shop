@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import Card from '@/components/Card.vue';
-import { useSneakersStore } from "@/stores/counter";
+import { useSneakersStore } from "@/stores/sneaker.ts";
 
 const sneakersStore = useSneakersStore();
 
@@ -14,19 +14,12 @@ const onChangeSearchInput = (event: any) => {
   sneakersStore.getSneakers();
 }
 
-const onClickAdd = () => {
-  console.log('clicked add');
+const onClickAdd = (sneakerId: number, isFavorite: boolean, isAdded: boolean) => {
+  sneakersStore.updateSneakers(sneakerId, isFavorite, !isAdded)
 };
 
-const onClickFavourite = (sneakerId: number, isFavorite: boolean) => {
-  sneakersStore.updateSneakers(sneakerId, !isFavorite).then(() => {
-    if (!isFavorite) {
-      sneakersStore.postFavorite(sneakerId);
-    } else {
-      sneakersStore.deleteFavorite(sneakerId);
-
-    }
-  });
+const onClickFavourite = (sneakerId: number, isFavorite: boolean, isAdded: boolean) => {
+  sneakersStore.updateSneakers(sneakerId, !isFavorite, isAdded)
 };
 
 sneakersStore.getSneakers();
@@ -66,8 +59,8 @@ sneakersStore.getSneakers();
         :img="item.imageUrl"
         :isFavorite="item.isFavorite"
         :isAdded="item.isAdded"
-        :onClickAdd="onClickAdd"
-        :onClickFavourite="() => onClickFavourite(item.id, item.isFavorite)"
+        :onClickAdd="() => onClickAdd(item.id, item.isFavorite, item.isAdded)"
+        :onClickFavourite="() => onClickFavourite(item.id, item.isFavorite, item.isAdded)"
     />
   </div>
 </template>

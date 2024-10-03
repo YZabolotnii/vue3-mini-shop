@@ -14,6 +14,10 @@ const props = defineProps({
 const clickFavourite = () => {
   props.onClickFavourite(); // Викликаємо передану функцію для зміни улюблених
 };
+
+const onClickAdd = () => {
+  props.onClickAdd(); // Викликаємо передану функцію для зміни улюблених
+};
 </script>
 
 <template>

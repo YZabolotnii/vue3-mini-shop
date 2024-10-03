@@ -29,10 +29,6 @@ export const useSneakersStore = defineStore('sneakers', () => {
     sneakers.value = arr;
   }
 
-  function setFavorite(obj: Favorite) {
-    favorites.value.push(obj);
-  }
-
   function setError(error: any) {
     errors.value = { ...error };
   }
@@ -55,48 +51,26 @@ export const useSneakersStore = defineStore('sneakers', () => {
         });
   }
 
-  function updateSneakers(id: number, favorite: boolean) {
+  function updateSneakers(id: number, favorite: boolean, add: boolean) {
     return axios.patch(`https://ac80202a41369ee0.mokky.dev/items/${id}/`, {
       isFavorite: favorite,
+      isAdded: add,
     })
         .then(() => {
           const index = sneakers.value.findIndex(sneaker => sneaker.id === id);
           if (index !== -1) {
             sneakers.value[index] = {
               ...sneakers.value[index],
-              isFavorite: favorite
+              isFavorite: favorite,
+              isAdded: add,
             };
           }
-        })
-        .catch(({ response }) => {
-          setError(response.data.errors);
-        });
-  }
-
-  function postFavorite(sneakerId: number) {
-    return axios.post(`https://ac80202a41369ee0.mokky.dev/favorites/`,{
-      sneakerId: sneakerId,
-    })
-        .then(({ data }) => {
-          setFavorite(data);
         })
         .catch(({ response }) => {
           errors.value = response.data.errors;
         });
   }
 
-  function deleteFavorite(favoriteId: number) {
-    return axios.delete(`https://ac80202a41369ee0.mokky.dev/favorites/${favoriteId}`)
-        .then(() => {
-          const index = favorites.value.findIndex(fav => fav.favoriteId === favoriteId);
-          if (index !== -1) {
-            favorites.value.splice(index, 1);
-          }
-        })
-        .catch(({ response }) => {
-          console.error(response.data.errors);
-        });
-  }
 
   // Call getSneakers when filters change
   watch(filters, getSneakers);
@@ -104,8 +78,6 @@ export const useSneakersStore = defineStore('sneakers', () => {
   return {
     getSneakers,
     updateSneakers,
-    postFavorite,
-    deleteFavorite,
     sneakers,
     favorites,
     filters
