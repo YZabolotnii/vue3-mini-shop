@@ -6,10 +6,13 @@ defineProps({
   totalPrice: Number
 })
 
+const emit = defineEmits(['closeDrawer'])
+
+
 </script>
 
 <template>
-  <div class="fixed z-10 top-0 h-full w-full bg-black opacity-70" />
+  <div @click="() => emit('closeDrawer')" class="fixed z-10 top-0 h-full w-full bg-black opacity-70" />
   <div class="flex flex-col justify-between fixed h-full z-10 top-0 right-0 w-96 bg-white px-10 py-7">
     <CartHeader />
 
@@ -21,7 +24,7 @@ defineProps({
       <div>
         <div class="flex flex-col gap-5">
           <div class="flex items-end gap-2">
-            <span>Итого:</span>
+            <span>Всього:</span>
             <div class="flex-1 border-b border-dashed" />
             <span class="font-bold">{{ totalPrice }} грн.</span>
           </div>

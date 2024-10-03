@@ -3,7 +3,7 @@ import Card from '@/components/Card.vue';
 import { useSneakersStore } from "@/stores/sneaker.ts";
 import Header from "@/components/Header.vue";
 import Drawer from "@/components/Drawer.vue";
-import {computed, provide, ref} from "vue";
+import {computed, provide, ref, watchEffect} from "vue";
 
 const sneakersStore = useSneakersStore();
 sneakersStore.getSneakers();
@@ -46,10 +46,18 @@ provide('cartActions', {
   closeDrawer,
   openDrawer
 })
+
+watchEffect(() => {
+  if (toggleDrawer.value) {
+    document.body.classList.add('overflow-hidden')
+  } else {
+    document.body.classList.remove('overflow-hidden')
+  }
+})
 </script>
 
 <template>
-  <Drawer v-if="toggleDrawer" :totalPrice="totalPrice"/>
+  <Drawer @closeDrawer="closeDrawer" v-if="toggleDrawer" :totalPrice="totalPrice"/>
 
   <div class="bg-white w-4/5 m-auto rounded-xl shadow-xl shadow-grey-200 mt-2">
     <Header @openDrawer="openDrawer" :totalPrice="totalPrice"/>

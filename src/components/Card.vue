@@ -28,7 +28,7 @@ const props = defineProps({
         <span class="text-slate-200">Ціна:</span>
         <span class="font-bold">{{ price }} грн</span>
       </div>
-      <img @click="onClickAdd" :src="!isAdded ? '/plus.svg' : '/checked.svg'" alt="Plus"/>
+      <img @click="onClickAdd" :src="!isAdded ? '/plus.svg' : '/checked.svg'" alt="Plus" width="32" height="56"/>
     </div>
   </div>
 </template>
