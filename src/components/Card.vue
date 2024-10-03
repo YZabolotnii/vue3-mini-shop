@@ -11,20 +11,13 @@ const props = defineProps({
   onClickFavourite: Function, // Додаємо новий props для обробки кліка на улюблені
 });
 
-const clickFavourite = () => {
-  props.onClickFavourite(); // Викликаємо передану функцію для зміни улюблених
-};
-
-const onClickAdd = () => {
-  props.onClickAdd(); // Викликаємо передану функцію для зміни улюблених
-};
 </script>
 
 <template>
   <div
       class="relative flex flex-col w-full border border-slate-100 rounded-xl p-8 cursor-pointer transition hover:shadow-xl hover:transform hover:-translate-y-2"
   >
-    <div @click="clickFavourite" class="absolute top-8 left-8">
+    <div @click="onClickFavourite" class="absolute top-8 left-8">
       <img v-if="!isFavorite" src="/like-1.svg" alt="Favorite"/>
       <img v-else src="/like-2.svg" alt="Favorite"/>
     </div>

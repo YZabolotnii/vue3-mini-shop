@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {inject} from "vue";
+import { inject } from "vue";
 
 const { closeDrawer } = inject('cartActions')
 

@@ -1,4 +1,9 @@
 <script setup lang="ts">
+import { defineProps } from 'vue';
+
+const props = defineProps({
+  totalPrice: Number
+});
 
 const emit = defineEmits(['openDrawer'])
 
@@ -16,7 +21,7 @@ const emit = defineEmits(['openDrawer'])
     <ul class="flex items-center gap-10">
       <li @click="() => emit('openDrawer')" class="flex items-center gap-3 cursor-pointer">
         <img src="/cart.svg" alt="Cart" />
-        <b>1205 грн</b>
+        <b>{{ totalPrice }} грн</b>
       </li>
       <li class="flex items-center gap-3 cursor-pointer">
         <img src="/heart.svg" alt="Favorite" />

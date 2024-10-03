@@ -3,7 +3,7 @@ import Card from '@/components/Card.vue';
 import { useSneakersStore } from "@/stores/sneaker.ts";
 import Header from "@/components/Header.vue";
 import Drawer from "@/components/Drawer.vue";
-import {provide, ref} from "vue";
+import {computed, provide, ref} from "vue";
 
 const sneakersStore = useSneakersStore();
 sneakersStore.getSneakers();
@@ -36,6 +36,12 @@ const openDrawer = () => {
   toggleDrawer.value = true
 }
 
+const totalPrice = computed(() => {
+  return sneakersStore.sneakers
+      .filter(sneaker => sneaker.isAdded)
+      .reduce((sum, sneaker) => sum + sneaker.price, 0);
+});
+
 provide('cartActions', {
   closeDrawer,
   openDrawer
@@ -43,10 +49,10 @@ provide('cartActions', {
 </script>
 
 <template>
-  <Drawer v-if="toggleDrawer" />
+  <Drawer v-if="toggleDrawer" :totalPrice="totalPrice"/>
 
   <div class="bg-white w-4/5 m-auto rounded-xl shadow-xl shadow-grey-200 mt-2">
-    <Header @openDrawer="openDrawer" />
+    <Header @openDrawer="openDrawer" :totalPrice="totalPrice"/>
     <div class="p-10">
       <div class="flex justify-between items-center mb-10">
         <h1 class="text-3xl font-bold">Все кроссовки</h1>

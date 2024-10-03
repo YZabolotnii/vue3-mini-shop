@@ -11,15 +11,10 @@ interface Sneakers {
   isAdded: boolean;
 }
 
-interface Favorite {
-  sneakerId: number;
-  favoriteId: number;
-}
 
 export const useSneakersStore = defineStore('sneakers', () => {
   const errors = ref({});
   const sneakers = ref<Sneakers[]>([]);
-  const favorites = ref<Favorite[]>([]); // Change to an array of Favorite
   const filters = ref({
     sortBy: 'title',
     searchQuery: ''
@@ -27,10 +22,6 @@ export const useSneakersStore = defineStore('sneakers', () => {
 
   function setSneakers(arr: Sneakers[]) {
     sneakers.value = arr;
-  }
-
-  function setError(error: any) {
-    errors.value = { ...error };
   }
 
   function getSneakers() {
@@ -71,7 +62,6 @@ export const useSneakersStore = defineStore('sneakers', () => {
         });
   }
 
-
   // Call getSneakers when filters change
   watch(filters, getSneakers);
 
@@ -79,7 +69,6 @@ export const useSneakersStore = defineStore('sneakers', () => {
     getSneakers,
     updateSneakers,
     sneakers,
-    favorites,
     filters
   };
 });
