@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import CardList from "@/components/CardList.vue";
 import {useSneakersStore} from "@/stores/sneaker.ts";
+import debounce from "lodash.debounce"
+
 
 const sneakersStore = useSneakersStore();
 sneakersStore.getSneakers();
@@ -10,10 +12,10 @@ const onChangeSelect = (event: any) => {
   sneakersStore.getSneakers();
 }
 
-const onChangeSearchInput = (event: any) => {
+const onChangeSearchInput = debounce((event: any) => {
   sneakersStore.filters.searchQuery = event.target.value;
   sneakersStore.getSneakers();
-}
+}, 2000)
 
 
 
