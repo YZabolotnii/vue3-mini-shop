@@ -12,7 +12,7 @@ const onClickRemove = (sneakerId: number, isFavorite: boolean, isAdded: boolean)
 
 </script>
 <template>
-  <div v-if="sneakersStore.sneakers.filter(sneakers => sneakers.isAdded).length" class="flex flex-col flex-1 gap-4 justify-between">
+  <div v-auto-animate v-if="sneakersStore.sneakers.filter(sneakers => sneakers.isAdded).length" class="flex flex-col flex-1 gap-4 justify-between" >
     <CartItem
         v-for="item in sneakersStore.sneakers.filter(sneakers => sneakers.isAdded)"
         :key="item.id"

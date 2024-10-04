@@ -1,14 +1,14 @@
 <script setup>
 import { defineProps } from 'vue';
 
-const props = defineProps({
+defineProps({
   title: String,
   img: String,
   price: Number,
   isFavorite: Boolean,
   isAdded: Boolean,
   onClickAdd: Function,
-  onClickFavourite: Function, // Додаємо новий props для обробки кліка на улюблені
+  onClickFavourite: Function
 });
 
 </script>

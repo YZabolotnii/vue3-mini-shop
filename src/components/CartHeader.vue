@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import { inject } from "vue";
 
-const { closeDrawer } = inject('cartActions')
+interface CartActions {
+  closeDrawer: () => void;
+}
+const { closeDrawer } = inject<CartActions>('cartActions')
 
 </script>
 <template>
